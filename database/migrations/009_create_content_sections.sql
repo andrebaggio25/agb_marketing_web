@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS content_sections (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  page_key VARCHAR(80) NOT NULL DEFAULT 'home',
+  section_key VARCHAR(80) NOT NULL,
+  title VARCHAR(255) NULL,
+  subtitle VARCHAR(500) NULL,
+  body MEDIUMTEXT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_page_section (page_key, section_key),
+  INDEX idx_page_key (page_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

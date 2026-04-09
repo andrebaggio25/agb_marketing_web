@@ -1,0 +1,2 @@
+-- Opcional: executado manualmente após migrate ou via seed.php
+-- Admin padrão (ver app/Services/SeedService.php): andrebaggio25@outlook.com

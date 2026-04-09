@@ -1,0 +1,319 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-body antialiased;
+  }
+}
+
+@layer components {
+  /* CTA secundário reutilizável (sections → contato) */
+  .agb-cta-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-burgundy/25 bg-white/90 px-6 py-3 text-xs font-bold uppercase tracking-[0.18em] text-burgundy shadow-sm transition hover:border-gold/50 hover:bg-white hover:shadow-md;
+  }
+  /* Padrão visual unificado (header + método): secção com brilho radial e borda */
+  .agb-section {
+    @apply relative overflow-hidden border-t border-burgundy/10 bg-landing;
+  }
+  .agb-section-glow {
+    @apply pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_60%_at_50%_-15%,rgba(110,15,47,0.09),transparent_58%)];
+  }
+  .agb-section-glow-strong {
+    @apply pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_100%,rgba(110,15,47,0.12),transparent_55%)];
+  }
+  .agb-section-inner {
+    @apply relative mx-auto max-w-6xl px-4 sm:px-6;
+  }
+  .agb-section-pad {
+    @apply py-24 md:py-32 lg:py-40;
+  }
+  .agb-section-pad-md {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+  .agb-kicker {
+    @apply font-mono text-[10px] font-bold uppercase tracking-[0.45em] text-burgundy/80;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold via-[#e8d491] to-gold bg-clip-text text-transparent;
+  }
+  .text-gradient-hero {
+    @apply bg-gradient-to-br from-white via-ivory to-gold/75 bg-clip-text text-transparent;
+  }
+  .text-gradient-hero-light {
+    @apply bg-gradient-to-br from-burgundy-dark via-burgundy to-[#8B2244] bg-clip-text text-transparent;
+  }
+  .border-gradient {
+    border-image: linear-gradient(135deg, rgba(216, 188, 103, 0.5), rgba(110, 15, 47, 0.8)) 1;
+  }
+  .glass-panel {
+    @apply border border-white/10 bg-white/[0.04] shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl;
+  }
+  .glass-panel-light {
+    @apply border border-burgundy/10 bg-white/85 shadow-[0_12px_40px_rgba(110,15,47,0.08)] backdrop-blur-xl;
+  }
+}
+
+/* Textura premium (papel / filme fotográfico) */
+.agb-grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Shimmer em botões (tech / produto SaaS) */
+.agb-btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.agb-btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.agb-btn-shimmer:hover::after {
+  transform: translateX(130%);
+}
+
+/* Cards: elevação suave + brilho na borda no hover */
+.agb-card-lift {
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s ease,
+    border-color 0.35s ease;
+}
+.agb-card-lift:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 28px 56px -18px rgba(110, 15, 47, 0.16),
+    0 0 0 1px rgba(216, 188, 103, 0.15);
+}
+
+
+/* Cursor glow (ativado por JS) */
+#agb-cursor-glow {
+  pointer-events: none;
+  position: fixed;
+  z-index: 45;
+  width: 22rem;
+  height: 22rem;
+  margin-left: -11rem;
+  margin-top: -11rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(216, 188, 103, 0.14) 0%, rgba(110, 15, 47, 0.06) 40%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  will-change: transform, opacity;
+}
+
+/* Barra de scroll no header */
+.agb-scroll-line {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agb-btn-shimmer::after {
+    display: none;
+  }
+  .agb-card-lift:hover {
+    transform: none;
+  }
+  .animate-mesh-drift,
+  .animate-mesh-drift-slow,
+  .animate-spin-slow,
+  .animate-scan-slow,
+  .animate-twinkle {
+    animation: none !important;
+  }
+}
+
+/* Roadmap SVG stroke draw */
+.roadmap-path-el {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+#roadmap-section.is-visible .roadmap-path-el {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.roadmap-vline-el {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+#roadmap-section.is-visible .roadmap-vline-el {
+  transform: scaleY(1);
+}
+
+@keyframes agbMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.agb-strip-marquee {
+  display: flex;
+  width: max-content;
+  animation: agbMarquee 52s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agb-strip-marquee {
+    animation: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.75rem;
+    column-gap: 1.5rem;
+  }
+  .agb-strip-marquee > div:first-child {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    row-gap: 0.5rem;
+  }
+  .agb-strip-marquee__dup {
+    display: none !important;
+  }
+}
+
+@keyframes agbRoadmapNodeGlow {
+  0%,
+  100% {
+    box-shadow: 0 12px 40px rgba(110, 15, 47, 0.12);
+  }
+  50% {
+    box-shadow:
+      0 14px 52px rgba(216, 188, 103, 0.32),
+      0 0 0 1px rgba(216, 188, 103, 0.2);
+  }
+}
+
+#roadmap-section.is-visible .agb-roadmap-node {
+  animation: agbRoadmapNodeGlow 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #roadmap-section.is-visible .agb-roadmap-node {
+    animation: none;
+  }
+}
+
+.agb-faq-panel {
+  display: none;
+}
+
+.agb-faq-item.is-open .agb-faq-panel {
+  display: block;
+}
+
+.agb-faq-item.is-open .agb-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.agb-faq-chevron {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+/* Hero funil */
+.agb-funnel-outline {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+#hero-funnel-panel.is-visible .agb-funnel-outline {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.agb-funnel-label {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+#hero-funnel-panel.is-visible .agb-funnel-label--1 {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.32s,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.32s;
+}
+
+#hero-funnel-panel.is-visible .agb-funnel-label--2 {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.82s,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.82s;
+}
+
+#hero-funnel-panel.is-visible .agb-funnel-label--3 {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) 1.28s,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 1.28s;
+}
+
+@keyframes agbFunnelFlowDash {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+#hero-funnel-panel.is-visible .agb-funnel-flow-line {
+  animation: agbFunnelFlowDash 2.4s linear 0.45s infinite;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .agb-funnel-wrap {
+    transition: transform 0.35s ease-out;
+  }
+  .agb-funnel-wrap:hover {
+    transform: perspective(900px) rotateX(1deg) rotateY(-1.5deg) scale(1.01);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agb-funnel-wrap:hover {
+    transform: none;
+  }
+  .agb-funnel-label {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+  }
+  #hero-funnel-panel .agb-funnel-outline {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+  #hero-funnel-panel.is-visible .agb-funnel-flow-line,
+  #hero-funnel-panel .agb-funnel-flow-line {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,4 @@
+# Bloqueia execução de scripts em uploads
+<FilesMatch "\.(php|phtml|php5|cgi)$">
+  Require all denied
+</FilesMatch>
