@@ -17,9 +17,18 @@ Passo a passo para publicar o projeto num servidor com PHP e MySQL (ex.: hospeda
 ## 2. Ficheiros no servidor
 
 1. Envie o projeto completo (FTP, SFTP, Git deploy, etc.), mantendo a estrutura de pastas.
-2. O **document root** do domínio deve apontar para a pasta **`public/`** (não para a raiz do repositório).
-   - Em Apache, use o `.htaccess` já existente em `public/`.
-   - Em Nginx, configure `root` para `.../public` e `try_files` para `index.php` conforme o teu snippet habitual para PHP.
+
+2. **Document root (duas opções válidas):**
+
+   **A — Recomendado:** apontar o domínio diretamente para a pasta **`public/`** (o PHP só serve o que está em `public/` + `.htaccess` interno).
+
+   **B — Git na Hostinger (raiz = repositório):** muitos deploys deixam o *document root* na **raiz do clone** (`public_html` = pasta com `app/`, `public/`, etc.). Neste projeto existe um **`.htaccess` na raiz** e um **`index.php` na raiz** que encaminham pedidos para `public/` (incluindo `deploy-setup.php` e `/assets/...`). Assim **não é obrigatório** alterar o document root no painel — após o pull, o site e o setup devem responder em:
+   - `https://seudominio.com.br/` → aplicação  
+   - `https://seudominio.com.br/deploy-setup.php?token=...` → script de setup  
+
+   Se ainda vires **404** ou a **“Página padrão”** da Hostinger, confirma no hPanel que o domínio usa a pasta correta do deploy e que não há outro `index.html` a sobrepor.
+
+   Em Nginx com raiz em `public/`, usa `root` para `.../public` e `try_files` para `index.php`.
 
 ## 3. Variáveis de ambiente (`.env`)
 
@@ -33,7 +42,7 @@ O PHP carrega **`/.env`** na raiz do projeto (ao lado de `app/`, `public/`, `boo
    - Se a palavra-passe tiver caracteres especiais (ex.: `@`), podes envolvê-la em aspas: `DB_PASSWORD="..."`.
    - `MAIL_*` e `SMTP_*` — e-mail de envio e destino dos leads (`MAIL_LEAD_TO`).
 
-3. Garante que **`.env` não é acessível pela web** (com document root em `public/`, o `.env` fica fora e não deve ser servido).
+3. Garante que **`.env` não é acessível pela web** (fica na raiz do projeto; o `.htaccess` na raiz bloqueia `/.env` quando o document root é a raiz do repositório).
 4. Define **`DEPLOY_SETUP_TOKEN`** (um segredo longo, ex.: `openssl rand -hex 24`). É usado só pelo script de setup inicial (`public/deploy-setup.php`).
 
 ## 3.1 Deploy via Git (ex.: Hostinger) + base de dados num único passo

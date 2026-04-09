@@ -1,0 +1,22 @@
+# Bloquear acesso direto ao .env se o document root for a raiz do repositório
+<Files ".env">
+  Require all denied
+</Files>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  DirectoryIndex index.php index.html
+
+  RewriteRule ^$ index.php [L]
+
+  # Servir ficheiros reais que estão em public/ (deploy-setup.php, assets, etc.)
+  RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+  RewriteRule ^ public%{REQUEST_URI} [L]
+
+  # Front controller para rotas da aplicação
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [QSA,L]
+</IfModule>
